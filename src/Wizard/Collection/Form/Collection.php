@@ -7,6 +7,7 @@ use Wizard\Collection\Form\Model;
 use Wizard\Collection\Form\Options;
 use Wizard\Collection\OptionsInterface;
 use Zend\Form\FormInterface;
+use Zend\Form\Form;
 
 class Collection implements CollectionInterface {
     
@@ -47,7 +48,7 @@ class Collection implements CollectionInterface {
         return $this->collectionOptions->has($key);
     }
     
-    public function getModel(){
+    public function getModel() : Form {
         return $this->collectionModel->getModel();
     }
     

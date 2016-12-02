@@ -10,6 +10,7 @@ use Zend\Mvc\Controller\Plugin\Redirect;
 use Wizard\Service\WizardInterface;
 use Wizard\Collection\StepCollectionInterface;
 use Interop\Container\ContainerInterface;
+use Wizard\Collection\Form\Collection;
 
 class Wizard implements WizardInterface{
     
@@ -64,18 +65,16 @@ class Wizard implements WizardInterface{
         return $this->container;
     }
     
-    public function getCurrentStep(){
-        $containerIterator = $this->container->getIterator()->getIterator();
-        while($containerIterator->valid()){
-            if(false === $containerIterator->current()){
-                $this->currentStep = $this->collection->getIterator()->offsetGet($containerIterator->key());
-                break;
+    public function getCurrentStep() : Collection {
+        $containerIterator = $this->container->getIterator();//->getIterator();
+        $collectionIterator = $this->collection->getIterator();
+        /* iterate over the collection */
+        while($collectionIterator->valid()){
+            if(!$containerIterator->offsetExists('step-'.($collectionIterator->key() + 1 ))){
+                $this->currentStep = $collectionIterator->current();
+                return $this->currentStep;
             }
-            $containerIterator->next();
-        }
-         
-        if(!$this->currentStep){
-            $this->currentStep = $this->collection->getIterator()->current();
+            $collectionIterator->next();
         }
         return $this->currentStep;
     }
@@ -114,7 +113,8 @@ class Wizard implements WizardInterface{
         if($this->currentStep->hasOption(OptionsInterface::ROUTEONNEXT)){
             $route = $this->currentStep->getOption(OptionsInterface::ROUTEONNEXT);
             if($route !== false){
-                return $this->redirect->toRoute($route, $params);
+                header('Location: '. $route);
+                exit;
             }
             return $this->redirect->toRoute(
                 $this->application
