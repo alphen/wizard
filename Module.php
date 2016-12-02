@@ -23,16 +23,7 @@ class Module implements AutoloaderProviderInterface{
     public function getServiceConfig(){
         return [
             'factories' => [
-                'YouWizardName' => function($containerInterface){
-                    $wizard = new \Wizard\Factory\Service\Wizard(
-                        $containerInterface,
-                        null,
-                        [
-                            'wizard' => 'YourConfigKey'
-                        ]
-                    ); 
-                    return $wizard;
-                }
+                'Wizard\Service\Wizard' => 'Wizard\Factory\Service\Wizard',
                 /* 'Wizard' => function($containerInterface){
                     $wizard = new Wizard($containerInterface);
                     $wizard->getFactory()->create('new_recipe');
