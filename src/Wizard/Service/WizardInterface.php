@@ -1,6 +1,6 @@
 <?php 
 
-namespace Wizzard;
+namespace Wizard\Service;
 
 interface WizardInterface{
     

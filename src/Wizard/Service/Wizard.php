@@ -7,7 +7,7 @@ use Wizard\Collection\StepCollection;
 use Wizard\Collection\OptionsInterface;
 use Zend\Mvc\Application;
 use Zend\Mvc\Controller\Plugin\Redirect;
-use Wizzard\WizardInterface;
+use Wizzard\Service\WizardInterface;
 use Wizard\Collection\StepCollectionInterface;
 
 class Wizard implements WizardInterface{

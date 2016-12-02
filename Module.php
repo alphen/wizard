@@ -20,11 +20,4 @@ class Module implements AutoloaderProviderInterface{
         );
     }
     
-    public function getServiceConfig(){
-        return [
-            'factories' => [
-                'Wizard\Service\Wizard' => 'Wizard\Factory\Service\Wizard',
-            ],
-        ];
-    }
 }
