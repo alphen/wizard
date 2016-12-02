@@ -8,10 +8,12 @@ use Wizard\Collection\OptionsInterface;
 use Zend\Mvc\Application;
 use Zend\Mvc\Controller\Plugin\Redirect;
 use Wizzard\WizardInterface;
+use Wizard\Collection\StepCollectionInterface;
 
 class Wizard implements WizardInterface{
     
     private $container;
+    private $config;
     private $collection;
     private $redirect;
     private $application;
@@ -21,22 +23,29 @@ class Wizard implements WizardInterface{
     
     public function __construct(
         AbstractContainer $container,
-        StepCollection $collection,
+        array $config,
         Application $application,
         Redirect $redirectPlugin
     ){
         $this->container = $container;
-        $this->collection = $collection;
+        $this->config = $config;
         $this->application = $application;
         $this->redirect = $redirectPlugin;
     }
-    
     
     public function reset(){
         $this->initialized = false;
         $this->factory = false;
         $this->container->getManager()->getStorage()->clear($this->container->getName());
         return $this;
+    }
+    
+    public function setup($options){
+        if(isset($options['collection']) && $options['collection'] instanceof StepCollectionInterface){
+            $this->collection = $options['collection'];
+        }else{
+            $this->collection = $this->createStepsFromConfig($this->config, $options);
+        }
     }
     
     public function setContainerSteps($totalStepsToWalk){
@@ -121,6 +130,49 @@ class Wizard implements WizardInterface{
     public function getCollection() : StepCollection{
         $this->isActive = true;
         return $this->collection;
+    }
+    
+    private function createStepsFromConfig($config, $options) : StepCollection {
+        if(!isset($config['wizard']) ||
+            !isset($options['wizard']) ||
+            !isset($config['wizard'][$options['wizard']])
+            ){
+                throw new \Exception('Configuration not complete');
+        }
+        $config = $config['wizard'][$options['wizard']];
+    
+        $collectionType = 'Form';
+        if(isset($config['collection_type'])){
+            $collectionType = $config['collection_type'];
+        }
+    
+        $stepCollection = new StepCollection();
+    
+        foreach($config as $key => $steps){
+            if(is_array($steps)){
+                $stepCollection->add(
+                    $key,
+                    $this->getTypeCollection(
+                        $steps,
+                        $collectionType
+                ));
+            }
+        }
+        return $stepCollection;
+    }
+    
+    private function getTypeCollection($steps, $collectionType){
+        $wizzardCollection = 'Wizard\\Collection\\'.$collectionType.'\\Collection';
+        $wizzardCollection = new $wizzardCollection();
+    
+        foreach($steps as $object => $step){
+            if($object == 'model'){
+                $wizzardCollection->setModel(new $step($this->serviceManager));
+            }else{
+                $wizzardCollection->setOptions($step);
+            }
+        }
+        return $wizzardCollection;
     }
     
 }

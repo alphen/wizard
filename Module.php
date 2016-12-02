@@ -24,14 +24,6 @@ class Module implements AutoloaderProviderInterface{
         return [
             'factories' => [
                 'Wizard\Service\Wizard' => 'Wizard\Factory\Service\Wizard',
-                /* 'Wizard' => function($containerInterface){
-                    $wizard = new Wizard($containerInterface);
-                    $wizard->getFactory()->create('new_recipe');
-                    $container = new Container('new_recipe');
-                    $wizard->setContainer($container);
-                    $wizard->setContainerSteps($wizard->getCollection()->count());
-                    return $wizard;
-                }, */
             ],
         ];
     }
