@@ -7,8 +7,9 @@ use Wizard\Collection\StepCollection;
 use Wizard\Collection\OptionsInterface;
 use Zend\Mvc\Application;
 use Zend\Mvc\Controller\Plugin\Redirect;
-use Wizzard\Service\WizardInterface;
+use Wizard\Service\WizardInterface;
 use Wizard\Collection\StepCollectionInterface;
+use Interop\Container\ContainerInterface;
 
 class Wizard implements WizardInterface{
     
@@ -18,19 +19,19 @@ class Wizard implements WizardInterface{
     private $redirect;
     private $application;
     private $currentStep;
+    private $containerInterface;
     
     private $initialized = false;
     
     public function __construct(
         AbstractContainer $container,
-        array $config,
-        Application $application,
-        Redirect $redirectPlugin
+        ContainerInterface $containerInterface
     ){
+        $this->containerInterface = $containerInterface;
+        $this->config  = $containerInterface->get('Config');
+        $this->application = $containerInterface->get('Application');
+        $this->redirect = $containerInterface->get('ControllerPluginManager')->get('redirect');
         $this->container = $container;
-        $this->config = $config;
-        $this->application = $application;
-        $this->redirect = $redirectPlugin;
     }
     
     public function reset(){
@@ -167,7 +168,7 @@ class Wizard implements WizardInterface{
     
         foreach($steps as $object => $step){
             if($object == 'model'){
-                $wizzardCollection->setModel(new $step($this->serviceManager));
+                $wizzardCollection->setModel($this->containerInterface->get($step));
             }else{
                 $wizzardCollection->setOptions($step);
             }

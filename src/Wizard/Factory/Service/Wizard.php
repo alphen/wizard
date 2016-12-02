@@ -25,9 +25,7 @@ class Wizard implements FactoryInterface{
         
         return new WizardService(
             new Container($this->containerName),
-            $container->get('Config'),
-            $container->get('Application'),
-            $container->get('ControllerPluginManager')->get('redirect')
+            $container
         );
     }
     
