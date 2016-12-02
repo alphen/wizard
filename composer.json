@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Wizzard": "src/"
+            "Wizard": "src/"
         },
         "classmap": [
             "./Module.php"

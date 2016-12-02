@@ -1,6 +1,6 @@
 <?php
 
-namespace Wizzard;
+namespace Wizard;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 
@@ -31,7 +31,7 @@ class Module implements AutoloaderProviderInterface{
                             'wizard' => 'YourConfigKey'
                         ]
                     ); 
-                    
+                    return $wizard;
                 }
                 /* 'Wizard' => function($containerInterface){
                     $wizard = new Wizard($containerInterface);
