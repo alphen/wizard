@@ -1,0 +1,33 @@
+{
+    "name": "alphen/wizard",
+    "description": "",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf3", "wizzard", "form" , "step", "route"
+    ],
+    "homepage": "https://github.com/alphen/wizard",
+    "authors": [
+        {
+            "name": "Peter van Alphen",
+            "email": "alphen@outlook.com"
+        }
+    ],
+    "require": {
+        "php": "~7.0",
+        "zendframework/zendframework" : "3.*"
+        
+    },
+    "require-dev" : {
+        "phpunit/PHPUnit" : "~4.0",
+    	"zendframework/zend-test": "^3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Wizzard": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
